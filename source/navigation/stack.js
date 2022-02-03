@@ -18,13 +18,14 @@ const  Stack = () =>  {
    return (
     //  <Text></Text>
      <NavigationContainer>
-       <Drawer.Navigator  initialRouteName="dashboard">
+       <Drawer.Navigator  initialRouteName="login">
          <Drawer.Screen name="Dashboard" component={Dashboard} />
          <Drawer.Screen name="Stock" component={FoodStock} />
          <Drawer.Screen name="Finance" component={Finance} />
          <Drawer.Screen name="Health" component={Health} />
          <Drawer.Screen name="User-Support" component={UserSupport} />
          <Drawer.Screen name="Weight" component={Weight} />
+         <Drawer.Screen name="login" component={Login} />
        </Drawer.Navigator>
      </NavigationContainer>
    );

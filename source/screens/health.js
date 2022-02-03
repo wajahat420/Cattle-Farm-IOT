@@ -201,11 +201,11 @@ export default function FoodStock() {
 
   const addField = () => {
     const obj = {
-      sno : '',
-      breedname : '',
-      breedCost : '',
-      quantity : '',
-      purchaseDate : ''
+      // sno : '',
+      // breedname : '',
+      // breedCost : '',
+      // quantity : '',
+      // purchaseDate : ''
     }
     const dupData = [...data, obj]
 
