@@ -1,118 +1,121 @@
 import { View, Text, Dimensions, ScrollView } from 'react-native';
-import React from 'react';
-// import {
-//   LineChart,
-//   BarChart,
-//   PieChart,
-//   ProgressChart,
-//   ContributionGraph,
-//   StackedBarChart
-// } from 'react-native-chart-kit'
-import { LineChart,BarChart } from 'react-native-charts-wrapper'
+import React, {useEffect, useState} from 'react';
 
-import { VictoryChart, VictoryGroup, VictoryBar } from 'victory-native'
+import Firebase from "../config/firebase"
+const { database} = Firebase()
 
-const {screenWidth, height} = Dimensions.get('window')
+import { BarChart, Grid, XAxis,YAxis } from 'react-native-svg-charts'
+
 
 export default function Dashboard() {
-
-  const barData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 99, 43],
-      },
-    ],
-  };
-
-  const data = {
-    labels: ["January", "February", "March", "April", "May", "June"],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 99, 43]
-      }
-    ]
-  };
-
-  const chartConfig = {
-      backgroundColor: '#e26a00',
-      backgroundGradientFrom: '#fb8c00',
-      backgroundGradientTo: '#ffa726',
-      decimalPlaces: 2, // optional, defaults to 2dp
-      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-      style: {
-        borderRadius: 16
-      }
-    }
-
-    const xAxisObj={
-      valueFormatter: [2017,2018,2019],
-      labelRotationAngle: -45,
-      // drawLabels : true,
-      drawGridLines: false,
-      position: 'BOTTOM',
-      labelCount: 10,
-    }
+	const [data,setData] = useState([])
 
 
-  const legendObj = {
-    enabled: true,
-    textSize: 12,
-    form: 'CIRCLE',
-    formSize: 14, 	
-    formToTextSpace: 5,
-    wordWrapEnabled: true,
-    maxSizePercent: 0.5
-  }
+	useEffect(() => {
+		loadData()
+	 },[])
+  
+	 const loadData = () => {
+		database()
+		.ref('/Cattle')
+		.once("value")
+		.then(
+			snapshot => {
+			  if (snapshot.val()) {
+				let todos = snapshot.val()
+				let keys = Object.keys(todos)
+  
+				console.log('KEYS', keys);
+				console.log('todos', todos);
+				let data =  keys.map(elem => {
+					const obj = {
+						...todos[elem],
+							key:elem
+					}
+					return obj
+				})
 
-  const yAxisObj = {
-    left: {
-      drawGridLines: true,
-      gridColor: '#000000',
-      textColor: `#00000077`,
-      fontFamily: 'Roboto',
-      textSize: 14,
-      axisLineWidth: 0,
-      labelCount: 5,
-      drawAxisLines: true,
-      axisLineColor: '#FFFFFF00',
-      axisMinimum: 0, //0 
-      axisMaximum: 116000,
-      valueFormatter:'largeValue'
-    },
-    right: {
-      enabled: false,
-    },
-  }
+				// const 
+				setData(data)
+				// setKeys(keys)
+			  }
+			},
+			errorObject => {
+			  console.log("The read failed: " + errorObject.code);
+			}
+		 );
+	 }
+
+  const fill = 'rgb(50, 65, 150)'
+//   const initialWeights = [500, 10, 40, 95, 4, 24, 0, 85, 0, 0, 35, 53, 53, 24, 50, 20, 80]
+
+	 const initialWeights = data.map(elem => parseInt(elem.InitialWeight))
+	 const CurrentWeight = data.map(elem => parseInt(elem.CurrentWeight))
+	 const CattleName = data.map(elem => elem.CattleName)
+
   return (
-    <ScrollView style={{flex:1,padding:15}}>
+    <ScrollView style={{flex:1,padding:10}}>
 
-    {/* <Text>
-      Bezier Line Chart
-  </Text> */}
+    <View style={{position:'relative'}}>
+		 <Text style={{textAlign:'center', fontSize:18, fontWeight:'600',marginTop:20}}>Initial Weights</Text>
 
-    {/* <VictoryChart>
-      <VictoryGroup>
-        <VictoryBar/>
-        <VictoryBar/>
-        <VictoryBar/>
-      </VictoryGroup>
-    </VictoryChart> */}
+       <YAxis
+          style={{height:170,position:'absolute', top:70, left:5,margin:0}}
+          svg={{fontSize:9,margin:0,fill:"grey"}}
+          contentInset={{ left: 10, right: 10,bottom:5,top:5}}
 
-    {/* <BarChart
-    // style={graphStyle}
-    data={data}
-    width={screenWidth}
-    height={220}
-    yAxisLabel="$"
-    chartConfig={chartConfig}
-    verticalLabelRotation={30}
-  /> */}
-  {/* <LineChart
-    style={{flex:1}}
-    data={{dataSets : [{label : 'demo', values : [{y:1}, {y:2}, {y:3}]}]}}
-  />   */}
-  <Text style={{fontSize:20, textAlign:'center',marginBottom:20}}>Initial Weights</Text>
+          data ={initialWeights}
+          formatLabel={(val, index) => {
+            // console.log("VALL", val,index)
+            return val
+          }}
+        />
+      <BarChart style={{ height: 200 }} data={initialWeights} svg={{ fill }} contentInset={{ top: 20, bottom: 10, left: 25, right: 10 }}>
+        <Grid />
+      </BarChart>
+        <XAxis
+          style={{paddingHorizontal:10,marginTop:10,width:'100%', justifyContent:'space-around'}}
+          svg={{fontSize:11,fill:"grey"}}
+          contentInset={{ left: 30, right: 15,top:10 }}
+          data ={initialWeights}
+          formatLabel={(val, index) => {
+            return CattleName[val]
+          }}
+        />
+
+    </View>
+
+
+	 <View style={{position:'relative',marginTop:30}}>
+		<Text style={{textAlign:'center', fontSize:18, fontWeight:'600'}}>Current Weights</Text>
+       <YAxis
+          style={{height:180,position:'absolute', top:40, left:5,margin:0}}
+          svg={{fontSize:9,margin:0,fill:"grey"}}
+          contentInset={{ left: 10, right: 10,bottom:5,top:5}}
+
+          data ={CurrentWeight}
+          formatLabel={(val, index) => {
+            return val
+          }}
+        />
+      <BarChart style={{ height: 200 }} data={CurrentWeight} svg={{ fill }} contentInset={{ top: 20, bottom: 10, left: 25, right: 10 }}>
+        <Grid />
+      </BarChart>
+        <XAxis
+          style={{paddingHorizontal:10,marginTop:10,width:'100%', justifyContent:'space-around'}}
+          svg={{fontSize:11,fill:"grey"}}
+          contentInset={{ left: 30, right: 15,top:10 }}
+          data ={CurrentWeight}
+          formatLabel={(val, index) => {
+            return CattleName[val]
+          }}
+        />
+
+    </View>
+ 
+
+
+  {/* <Text style={{fontSize:20, textAlign:'center',marginBottom:20}}>Initial Weights</Text>
   <BarChart
     marker={{
       digits:2
@@ -121,17 +124,12 @@ export default function Dashboard() {
 
 
     drawValueAboveBar={false}
-    // highlightFullBarEnabled={false}
     valueFormatter = {['Jan', 'Feb', 'Mar']}
     style={{height:200, width:'100%'}}
-    // xAxis={xAxisObj}
-    // yAxis={yAxisObj}
-    // legend={legendObj}	
-    // yAxis={}
     data={{
       dataSets : 
       [{
-        label : 'Initial weights',
+        label : 'Initial weights'
         values : [{y:6,x:1}, {y:2,x:2}, {y:3,x:3}]}],
         config: {color: '#D63D55', valueFormatter:'largeValue', valueTextSize: 10},
       }}
@@ -146,11 +144,8 @@ export default function Dashboard() {
 
 
     drawValueAboveBar={false}
-    // highlightFullBarEnabled={false}
     valueFormatter = {['Jan', 'Feb', 'Mar']}
     style={{height:200, width:'100%'}}
-    // xAxis={xAxisObj}
-    // yAxis={yAxisObj}
     legend={legendObj}	
     // yAxis={}
     data={{
@@ -160,28 +155,8 @@ export default function Dashboard() {
         values : [{y:6,x:1}, {y:2,x:2}, {y:3,x:3}]}],
         config: {color: '#D63D55', valueFormatter:'largeValue', valueTextSize: 10},
       }}
-  />
-      {/* <LineChart
-        data={linedata}
-        width={Dimensions.get('window').width} // from react-native
-        height={220}
-        yAxisLabel={'$'}
-        chartConfig={{
-          backgroundColor: '#e26a00',
-          backgroundGradientFrom: '#fb8c00',
-          backgroundGradientTo: '#ffa726',
-          decimalPlaces: 2, // optional, defaults to 2dp
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          style: {
-            borderRadius: 16
-          }
-        }}
-        bezier
-        style={{
-          marginVertical: 8,
-          borderRadius: 16
-        }}
-      /> */}
+  /> */}
+      
     </ScrollView>
   );
 }
