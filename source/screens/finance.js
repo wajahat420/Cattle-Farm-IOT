@@ -219,7 +219,7 @@ export default function FoodStock() {
   console.log("keys", keys);
 
   return (
-    <View >
+    <View style={{paddingBottom:100}}>
 
     <View style={{alignItems:'flex-end',margin:10}}>
     <TouchableOpacity onPress={addField} style={{backgroundColor:'brown',padding:5,paddingHorizontal:15,borderRadius:10}}>
@@ -228,26 +228,28 @@ export default function FoodStock() {
 
     </View>
 
-  <ScrollView 
-              directionalLockEnabled={false}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-          >
-  <View style={{width:'100%',marginHorizontal:15}}>
+    <ScrollView>
+      <ScrollView 
+                  directionalLockEnabled={false}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              >
+      <View style={{width:'100%',marginHorizontal:15}}>
 
-    {
-      data.map((elem,index) => {
-        return (
-          <View style={{flexDirection:'row', marginVertical:5, alignItems:'center'}}>
-            {renderRow(elem, index)}
-          </View>
+        {
+          data.map((elem,index) => {
+            return (
+              <View style={{flexDirection:'row', marginVertical:5, alignItems:'center'}}>
+                {renderRow(elem, index)}
+              </View>
 
-        )
+            )
 
-      })
-    }
-  </View>
-  </ScrollView>
+          })
+        }
+      </View>
+      </ScrollView>
+    </ScrollView>
 
       <Text></Text>
     </View>

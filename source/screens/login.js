@@ -2,6 +2,7 @@ import { View, Text ,Alert, TouchableOpacity, ToastAndroid,ImageBackground} from
 import React from 'react';
 import { TextInput } from 'react-native-paper';
 import Firebase from "../config/firebase"
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const { auth} = Firebase()
 
@@ -18,9 +19,8 @@ export default function Login({navigation, setLogin}) {
       if(email && pass){
         let response = await auth().signInWithEmailAndPassword(email, pass)
         if (response && response.user) {
+          await AsyncStorage.setItem('email', email)
           setLogin()
-          // navigation.navigate('Dashboard')
-          // Alert.alert("Success ✅", "Authenticated successfully")
         }
       }
     } catch (e) {
