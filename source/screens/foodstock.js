@@ -18,15 +18,12 @@ export default function FoodStock() {
   const loadData = () => {
     database()
     .ref('/foodstock')
-    .once("value")
-    .then(
+    .on("value",
        snapshot => {
          if (snapshot.val()) {
           let todos = snapshot.val()
           let keys = Object.keys(todos)
 
-          console.log('KEYS', keys);
-          console.log('todos', todos);
           let data =  keys.map(elem => {
              const obj = {
                 ...todos[elem],
@@ -46,8 +43,6 @@ export default function FoodStock() {
   
 
   const upadteData = (index) => {
-    console.log("INDEXX", index);
-    console.log("keys", keys);
 
     if(index <= keys.length){
 
@@ -214,9 +209,6 @@ export default function FoodStock() {
 
   }
 
-  // console.log("DATAAA", data);
-  // console.log("ind", editIndex);
-  console.log("keys", keys);
 
   return (
     <View style={{paddingBottom:100}}>

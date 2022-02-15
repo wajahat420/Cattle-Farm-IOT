@@ -28,7 +28,7 @@ export default function App() {
   return (
       state === true
       ?
-      <Stack/>
+      <Stack reload={isLogin}/>
       :
       state === false
       ?

@@ -25,8 +25,6 @@ export default function Dashboard() {
 				let todos = snapshot.val()
 				let keys = Object.keys(todos)
   
-				console.log('KEYS', keys);
-				console.log('todos', todos);
 				let data =  keys.map(elem => {
 					const obj = {
 						...todos[elem],
@@ -35,9 +33,7 @@ export default function Dashboard() {
 					return obj
 				})
 
-				// const 
 				setData(data)
-				// setKeys(keys)
 			  }
 			},
 			errorObject => {
@@ -47,7 +43,6 @@ export default function Dashboard() {
 	 }
 
   const fill = 'rgb(50, 65, 150)'
-//   const initialWeights = [500, 10, 40, 95, 4, 24, 0, 85, 0, 0, 35, 53, 53, 24, 50, 20, 80]
 
 	 const initialWeights = data.map(elem => parseInt(elem.InitialWeight))
 	 const CurrentWeight = data.map(elem => parseInt(elem.CurrentWeight))
@@ -66,7 +61,6 @@ export default function Dashboard() {
 
           data ={initialWeights}
           formatLabel={(val, index) => {
-            // console.log("VALL", val,index)
             return val
           }}
         />

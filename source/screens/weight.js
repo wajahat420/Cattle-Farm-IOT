@@ -18,15 +18,12 @@ export default function FoodStock() {
   const loadData = () => {
     database()
     .ref('/Cattle')
-    .once("value")
-    .then(
+    .on("value",
        snapshot => {
          if (snapshot.val()) {
           let todos = snapshot.val()
           let keys = Object.keys(todos)
 
-          console.log('KEYS', keys);
-          console.log('todos', todos);
           let data =  keys.map(elem => {
              const obj = {
                 ...todos[elem],
@@ -46,8 +43,6 @@ export default function FoodStock() {
   
 
   const upadteData = (index) => {
-    console.log("INDEXX", index);
-    console.log("keys", keys);
 
     if(index <= keys.length){
 
@@ -83,15 +78,12 @@ export default function FoodStock() {
 
     setData(dupData)
 
-    console.log("UPDATE", dupData);
   }
 
   const deleteItem = (index) => {
-    console.log("DELETE",index, data[index])
     let userRef = database().ref('Cattle/' + data[index].key);
     userRef.remove()
     .then(res => {
-      // setEditIndex(-1)
       loadData()
       ToastAndroid.show('Deleted successfully', ToastAndroid.SHORT)
     })

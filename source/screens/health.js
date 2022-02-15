@@ -13,41 +13,40 @@ export default function FoodStock() {
 
   useEffect(() => {
     loadData()
+    database()
+    .ref('/health')
+
+
   },[])
 
   const loadData = () => {
     database()
     .ref('/health')
-    .once("value")
-    .then(
-       snapshot => {
-         if (snapshot.val()) {
-          let todos = snapshot.val()
-          let keys = Object.keys(todos)
+    .on("value",  snapshot => {
+      if (snapshot.val()) {
+       let todos = snapshot.val()
+       let keys = Object.keys(todos)
 
-          console.log('KEYS', keys);
-          console.log('todos', todos);
-          let data =  keys.map(elem => {
-             const obj = {
-                ...todos[elem],
-                   key:elem
-             }
-             return obj
-          })
-          setData([header,...data])
-          setKeys(keys)
-         }
-       },
-       errorObject => {
-         console.log("The read failed: " + errorObject.code);
-       }
-     );
+       let data =  keys.map(elem => {
+          const obj = {
+             ...todos[elem],
+                key:elem
+          }
+          return obj
+       })
+       setData([header,...data])
+       setKeys(keys)
+      }
+    },
+    errorObject => {
+      console.log("The read failed: " + errorObject.code);
+    }
+  )
+
   }
   
 
   const upadteData = (index) => {
-    console.log("INDEXX", index);
-    console.log("keys", keys);
 
     if(index <= keys.length){
 
@@ -214,9 +213,6 @@ export default function FoodStock() {
 
   }
 
-  // console.log("DATAAA", data);
-  // console.log("ind", editIndex);
-  console.log("keys", keys);
 
   return (
     <View style={{paddingBottom:100}}>
