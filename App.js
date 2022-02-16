@@ -43,10 +43,13 @@ export default function App() {
       :
       null
       }
-
+      {
+        state == true
+        &&
       <TouchableOpacity onPress={logout} style={{position:'absolute', top:15, right:30, zIndex:1000}}>
         <MaterialIcons name='logout' size={25} color='black'/>
       </TouchableOpacity>
+      }
     </>
   );
 }
