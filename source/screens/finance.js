@@ -32,8 +32,7 @@ export default function FoodStock({ navigation }) {
     setData([header])
     database()
     .ref(`/finance/${table}`)
-    .once("value")
-    .then(
+    .on("value",
        snapshot => {
          if (snapshot.val()) {
           let todos = snapshot.val()

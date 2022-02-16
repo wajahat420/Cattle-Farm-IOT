@@ -13,10 +13,6 @@ export default function FoodStock() {
 
   useEffect(() => {
     loadData()
-    database()
-    .ref('/health')
-
-
   },[])
 
   const loadData = () => {
@@ -235,7 +231,7 @@ export default function FoodStock() {
       {
         data.map((elem,index) => {
           return (
-            <View style={{flexDirection:'row', borderColor:'gray', borderWidth:1, marginVertical:2,padding:8, alignItems:'center'}}>
+              <View style={{flexDirection:'row', borderColor:'gray', borderWidth:1, marginVertical:2,padding:8, alignItems:'center'}}>
               {renderRow(elem, index)}
             </View>
 
