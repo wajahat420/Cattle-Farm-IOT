@@ -235,7 +235,7 @@ export default function FoodStock() {
       {
         data.map((elem,index) => {
           return (
-            <View style={{flexDirection:'row', marginVertical:5, alignItems:'center'}}>
+            <View style={{flexDirection:'row', borderColor:'gray', borderWidth:1, marginVertical:2,padding:8, alignItems:'center'}}>
               {renderRow(elem, index)}
             </View>
 

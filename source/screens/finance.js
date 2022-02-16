@@ -2,22 +2,36 @@ import { View, Text, ScrollView, StyleSheet, FlatList, TouchableOpacity, TextInp
 import React,{useEffect, useState} from 'react';
 import Firebase from "../config/firebase"
 
-export default function FoodStock() {
+export default function FoodStock({ navigation }) {
 
   const { database} = Firebase()
   const [data,setData] = useState([])
   const [keys,setKeys] = useState([])
   const [editIndex,setEditIndex] = useState(0)
-  const header = ['S.no', 'BreedName', 'Quantity', 'Purchase Date', 'Breed Cost', 'Edit', 'Delete']
+  const [headerVal,setHeader] = useState(0)
+
+  const table = headerVal == 0 ? 'cattleFinance' : headerVal == 1 ? 'expense' : 'other_expense'
+  const header = headerVal == 0 ?
+  ['ID', 'CattleName', 'CattleExpense', 'PurchaseCost', 'SaleCost', 'Margin', 'Edit', 'Delete']
+  :
+  headerVal == 1
+  ?
+  ['ID', 'CattleName','Expense name', 'Cattle Expense', 'Expense date', 'Edit', 'Delete']
+  :
+  ['ID', 'Expense','Cost', 'Date', 'Edit', 'Delete']
+
+
   // const value = 
 
   useEffect(() => {
     loadData()
-  },[])
+  },[headerVal])
 
   const loadData = () => {
+
+    setData([header])
     database()
-    .ref('/finance')
+    .ref(`/finance/${table}`)
     .once("value")
     .then(
        snapshot => {
@@ -46,12 +60,10 @@ export default function FoodStock() {
   
 
   const upadteData = (index) => {
-    console.log("INDEXX", index);
-    console.log("keys", keys);
 
     if(index <= keys.length){
 
-      let userRef = database().ref('finance/' + data[index].key);
+      let userRef = database().ref(`finance/${table}/` + data[index].key);
       userRef.update(data[index])
       .then(res => {
         setEditIndex(-1)
@@ -62,7 +74,7 @@ export default function FoodStock() {
   
       })
     }else{
-      let userRef = database().ref('/finance').push(data[index])
+      database().ref(`/finance/${table}`).push(data[index])
       .then(res => {
         loadData()
         setEditIndex(-1)
@@ -83,7 +95,6 @@ export default function FoodStock() {
 
     setData(dupData)
 
-    console.log("UPDATE", dupData);
   }
 
   const deleteItem = (index) => {
@@ -100,7 +111,9 @@ export default function FoodStock() {
     })
   }
 
-  const renderRow = (elem, index) => {
+  const renderCattleFinance = (elem, index) => {
+
+
     if(index == 0){
 
       const render = header.map(elem => <Text style={styles.heading}>{elem}</Text>)
@@ -114,25 +127,138 @@ export default function FoodStock() {
 
             if(ind == 0){
               return (
-                <TextInput onChangeText={text => changeText(text, index, 'sno')} style={styles.editText} value={data[index].sno}/>
+                <TextInput onChangeText={text => changeText(text, index, 'CattleID')} style={styles.editText} value={data[index].CattleID}/>
               )
             }else if(ind == 1){
               return (
-                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'breedname')} value={data[index].breedname}/>
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'CattleName')} value={data[index].CattleName}/>
               )
             }else if(ind == 2){
               return (
-                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'quantity')} value={data[index]?.quantity}/>
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'CattleExpense')} value={data[index]?.CattleExpense}/>
               )
             }else if(ind == 3){
               return (
-                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'purchaseDate')} value={data[index]?.purchaseDate}/>
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'PurchaseCost')} value={data[index]?.PurchaseCost}/>
               )
             }else if(ind == 4){
               return (
-                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'breedCost')} value={data[index]?.breedCost}/>
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'SaleCost')} value={data[index]?.SaleCost}/>
               )
             }
+            else if(ind == 5){
+              return (
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Margin')} value={data[index]?.Margin}/>
+              )
+            }
+            else if(ind == 6){
+              return(
+                <View style={{width:110}}>
+                  <TouchableOpacity onPress={() => upadteData(index)} style={styles.saveBtn}>
+                    <Text style={styles.saveBtnText}>Save</Text>
+                  </TouchableOpacity>
+                </View>
+
+              )
+            }
+            else{
+              return(
+                <TouchableOpacity onPress={() => deleteItem(index)} style={styles.delete}>
+                  <Text style={styles.updateBtnText}>Delete</Text>
+                </TouchableOpacity>
+                )
+            }
+          })
+        )
+      }else{
+
+        return (
+          header.map((item,ind) => {
+  
+            if(ind == 0){
+              return (
+                <Text style={styles.heading}>{elem.CattleID}</Text>
+              )
+            }else if(ind == 1){
+              return (
+                <Text style={styles.heading}>{elem.CattleName}</Text>
+              )
+            }else if(ind == 2){
+              return (
+                <Text style={styles.heading}>{elem.CattleExpense}</Text>
+              )
+            }else if(ind == 3){
+              return (
+                <Text style={styles.heading}>{elem.PurchaseCost}</Text>
+              )
+            }else if(ind == 4){
+              return (
+                <Text style={styles.heading}>{elem.SaleCost}</Text>
+              )
+            }
+            else if(ind == 5){
+              return (
+                <Text style={styles.heading}>{elem.Margin}</Text>
+              )
+            }
+            else if(ind == 6){
+              return(
+                <View style={{width:110}}>
+                <TouchableOpacity  onPress={() => setEditIndex(index)} style={styles.btn}>
+                  <Text style={styles.updateBtnText}>Update</Text>
+                </TouchableOpacity>
+                </View>
+              )
+            }else{
+              return(
+                <TouchableOpacity onPress={() => deleteItem(index)} style={styles.delete}>
+                  <Text style={styles.updateBtnText}>Delete</Text>
+                </TouchableOpacity>
+                )
+            }
+          })
+        )
+      }
+
+    }
+  }
+
+  const renderCattleExpense = (elem, index) => {
+
+
+    if(index == 0){
+
+      const render = header.map(elem => <Text style={styles.heading}>{elem}</Text>)
+      return render
+    }
+    else{
+      if(editIndex === index){
+        return(
+          header.map((elem, ind) => {
+    
+
+            if(ind == 0){
+              return (
+                <TextInput onChangeText={text => changeText(text, index, 'CattleID')} style={styles.editText} value={data[index].CattleID}/>
+              )
+            }else if(ind == 1){
+              return (
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'CattleName')} value={data[index].CattleName}/>
+              )
+            }else if(ind == 2){
+              return (
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'ExpenseName')} value={data[index]?.ExpenseName}/>
+              )
+            }else if(ind == 3){
+              return (
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'CattleExpense')} value={data[index]?.CattleExpense}/>
+              )
+            }else if(ind == 4){
+              return (
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'ExpenseDate')} value={data[index]?.ExpenseDate}/>
+              )
+            }
+           
             else if(ind == 5){
               return(
                 <View style={{width:110}}>
@@ -159,25 +285,123 @@ export default function FoodStock() {
   
             if(ind == 0){
               return (
-                <Text style={styles.heading}>{elem.sno}</Text>
+                <Text style={styles.heading}>{elem.CattleID}</Text>
               )
             }else if(ind == 1){
               return (
-                <Text style={styles.heading}>{elem.breedname}</Text>
+                <Text style={styles.heading}>{elem.CattleName}</Text>
               )
             }else if(ind == 2){
               return (
-                <Text style={styles.heading}>{elem.quantity}</Text>
+                <Text style={styles.heading}>{elem.ExpenseName}</Text>
               )
             }else if(ind == 3){
               return (
-                <Text style={styles.heading}>{elem.purchaseDate}</Text>
+                <Text style={styles.heading}>{elem.CattleExpense}</Text>
               )
             }else if(ind == 4){
               return (
-                <Text style={styles.heading}>{elem.breedCost}</Text>
+                <Text style={styles.heading}>{elem.ExpenseDate}</Text>
               )
-            }else if(ind == 5){
+            }
+           
+            else if(ind == 5){
+              return(
+                <View style={{width:110}}>
+                <TouchableOpacity  onPress={() => setEditIndex(index)} style={styles.btn}>
+                  <Text style={styles.updateBtnText}>Update</Text>
+                </TouchableOpacity>
+                </View>
+              )
+            }else{
+              return(
+                <TouchableOpacity onPress={() => deleteItem(index)} style={styles.delete}>
+                  <Text style={styles.updateBtnText}>Delete</Text>
+                </TouchableOpacity>
+                )
+            }
+          })
+        )
+      }
+
+    }
+  }
+
+  const renderOtherExpense = (elem, index) => {
+
+
+    if(index == 0){
+
+      const render = header.map(elem => <Text style={styles.heading}>{elem}</Text>)
+      return render
+    }
+    else{
+      if(editIndex === index){
+        return(
+          header.map((elem, ind) => {
+    
+
+            if(ind == 0){
+              return (
+                <TextInput onChangeText={text => changeText(text, index, 'ID')} style={styles.editText} value={data[index].ID}/>
+              )
+            }else if(ind == 1){
+              return (
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Expense')} value={data[index].Expense}/>
+              )
+            }else if(ind == 2){
+              return (
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Cost')} value={data[index]?.Cost}/>
+              )
+            }else if(ind == 3){
+              return (
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Date')} value={data[index]?.Date}/>
+              )
+            }
+           
+            else if(ind == 4){
+              return(
+                <View style={{width:110}}>
+                  <TouchableOpacity onPress={() => upadteData(index)} style={styles.saveBtn}>
+                    <Text style={styles.saveBtnText}>Save</Text>
+                  </TouchableOpacity>
+                </View>
+
+              )
+            }
+            else{
+              return(
+                <TouchableOpacity onPress={() => deleteItem(index)} style={styles.delete}>
+                  <Text style={styles.updateBtnText}>Delete</Text>
+                </TouchableOpacity>
+                )
+            }
+          })
+        )
+      }else{
+
+        return (
+          header.map((item,ind) => {
+  
+            if(ind == 0){
+              return (
+                <Text style={styles.heading}>{elem.ID}</Text>
+              )
+            }else if(ind == 1){
+              return (
+                <Text style={styles.heading}>{elem.Expense}</Text>
+              )
+            }else if(ind == 2){
+              return (
+                <Text style={styles.heading}>{elem.Cost}</Text>
+              )
+            }else if(ind == 3){
+              return (
+                <Text style={styles.heading}>{elem.Date}</Text>
+              )
+            }
+           
+            else if(ind == 4){
               return(
                 <View style={{width:110}}>
                 <TouchableOpacity  onPress={() => setEditIndex(index)} style={styles.btn}>
@@ -200,33 +424,45 @@ export default function FoodStock() {
   }
 
   const addField = () => {
-    const obj = {
-      sno : '',
-      breedname : '',
-      breedCost : '',
-      quantity : '',
-      purchaseDate : ''
-    }
-    const dupData = [...data, obj]
+ 
+    const dupData = [...data, {}]
 
     setData(dupData)
     setEditIndex(dupData.length-1)
 
   }
 
-  // console.log("DATAAA", data);
-  // console.log("ind", editIndex);
-  console.log("keys", keys);
 
   return (
     <View style={{paddingBottom:100}}>
 
+
     <View style={{alignItems:'flex-end',margin:10}}>
-    <TouchableOpacity onPress={addField} style={{backgroundColor:'brown',padding:5,paddingHorizontal:15,borderRadius:10}}>
-      <Text style={{textAlign:'right', fontSize:15, color:'white', }}>Add</Text>
+      <TouchableOpacity onPress={addField} style={{backgroundColor:'brown',padding:5,paddingHorizontal:15,borderRadius:10}}>
+        <Text style={{textAlign:'right', fontSize:15, color:'white', }}>Add</Text>
+      </TouchableOpacity>
+    </View>
+
+  <View style={{flexDirection:'row', marginBottom:15, justifyContent:'space-around', borderBottomColor:'gray', borderBottomWidth:1, alignItems:'center'}}>
+    <TouchableOpacity 
+    onPress={() => setHeader(0)}
+    style={[styles.header, headerVal == 0 && {backgroundColor:'#d9d9d9'}]}>
+      <Text style={styles.headerText}>Cattle Finance</Text>
     </TouchableOpacity>
 
-    </View>
+    <TouchableOpacity 
+    onPress={() => setHeader(1)}
+    style={[styles.header , headerVal == 1 && {backgroundColor:'#d9d9d9'}]}>
+      <Text style={styles.headerText}>Cattle Expense</Text>
+    </TouchableOpacity>
+
+    <TouchableOpacity 
+    onPress={() => setHeader(2)}
+    style={[styles.header, headerVal == 2 && {backgroundColor:'#d9d9d9'}]}>
+      <Text style={styles.headerText}>Other Expense</Text>
+    </TouchableOpacity>
+  </View>
+
 
     <ScrollView>
       <ScrollView 
@@ -239,8 +475,18 @@ export default function FoodStock() {
         {
           data.map((elem,index) => {
             return (
-              <View style={{flexDirection:'row', marginVertical:5, alignItems:'center'}}>
-                {renderRow(elem, index)}
+              <View style={{flexDirection:'row', borderColor:'gray', borderWidth:1, marginVertical:2,padding:8, alignItems:'center'}}>
+                {
+                  headerVal == 0
+                  ?
+                  renderCattleFinance(elem, index)
+                  :
+                  headerVal == 1
+                  ?
+                  renderCattleExpense(elem, index)
+                  :
+                  renderOtherExpense(elem, index)
+                }
               </View>
 
             )
@@ -269,6 +515,15 @@ const styles = StyleSheet.create({
     height : 30,
     marginLeft:5
 
+  },
+  headerText : {
+    fontSize:15,
+    fontWeight:'600'
+  },
+  header : {
+    padding : 10,
+    backgroundColor:'white',
+    elevation:4
   },
   delete : {
     backgroundColor:'red',

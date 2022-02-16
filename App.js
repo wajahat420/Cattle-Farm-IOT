@@ -1,9 +1,10 @@
 import 'react-native-gesture-handler'
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Stack from './source/navigation/stack';
 import Login from './source/screens/login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 export default function App() {
 
@@ -23,9 +24,15 @@ export default function App() {
       setState(false)
     }
   }
-  console.log('STATE', state, typeof state)
+
+  const logout = async() => {
+    await AsyncStorage.setItem('email', '')
+    isLogin()
+  }
 
   return (
+    <>
+    {  
       state === true
       ?
       <Stack reload={isLogin}/>
@@ -35,5 +42,11 @@ export default function App() {
       <Login setLogin={isLogin}/>
       :
       null
+      }
+
+      <TouchableOpacity onPress={logout} style={{position:'absolute', top:15, right:30, zIndex:1000}}>
+        <MaterialIcons name='logout' size={25} color='black'/>
+      </TouchableOpacity>
+    </>
   );
 }

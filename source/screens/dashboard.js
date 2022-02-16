@@ -48,6 +48,9 @@ export default function Dashboard() {
 	 const CurrentWeight = data.map(elem => parseInt(elem.CurrentWeight))
 	 const CattleName = data.map(elem => elem.CattleName)
 
+	 console.log('WEIGHTS', initialWeights)
+	 console.log('CurrentWeight', CurrentWeight)
+
   return (
     <ScrollView style={{flex:1,padding:10}}>
 
