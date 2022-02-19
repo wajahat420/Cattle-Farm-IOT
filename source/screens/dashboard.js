@@ -18,8 +18,7 @@ export default function Dashboard() {
 	 const loadData = () => {
 		database()
 		.ref('/Cattle')
-		.once("value")
-		.then(
+		.on("value",
 			snapshot => {
 			  if (snapshot.val()) {
 				let todos = snapshot.val()
@@ -44,11 +43,13 @@ export default function Dashboard() {
 
   const fill = 'rgb(50, 65, 150)'
 
-	 const initialWeights = data.map(elem => parseInt(elem.InitialWeight))
-	 const CurrentWeight = data.map(elem => parseInt(elem.CurrentWeight))
-	 const CattleName = data.map(elem => elem.CattleName)
+  console.log('WEIGHTS', data)
 
-	 console.log('WEIGHTS', initialWeights)
+	 const initialWeights = data.filter(elem => !!parseInt(elem.InitialWeight)).map(elem => parseInt(elem.InitialWeight))
+	 let CurrentWeight = data.filter(elem => !!parseInt(elem.CurrentWeight)).map(elem => parseInt(elem.CurrentWeight))
+	 let CurrentName = data.filter(elem => !!parseInt(elem.CurrentWeight)).map(elem => elem.CattleName)
+	 const InitialName = data.filter(elem => !!parseInt(elem.InitialWeight)).map(elem => elem.CattleName)
+
 	 console.log('CurrentWeight', CurrentWeight)
 
   return (
@@ -76,7 +77,7 @@ export default function Dashboard() {
           contentInset={{ left: 30, right: 15,top:10 }}
           data ={initialWeights}
           formatLabel={(val, index) => {
-            return CattleName[val]
+            return InitialName[val]
           }}
         />
 
@@ -104,7 +105,7 @@ export default function Dashboard() {
           contentInset={{ left: 30, right: 15,top:10 }}
           data ={CurrentWeight}
           formatLabel={(val, index) => {
-            return CattleName[val]
+            return CurrentName[val]
           }}
         />
 

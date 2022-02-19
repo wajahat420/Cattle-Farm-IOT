@@ -8,7 +8,7 @@ export default function FoodStock() {
   const [data,setData] = useState([])
   const [keys,setKeys] = useState([])
   const [editIndex,setEditIndex] = useState(0)
-  const header = ['Cattle ID', 'Cattle Name', 'Cattle Color', 'Current Weight', 'Initial Weight', 'Status', 'Edit', 'Delete']
+  const header = ['Cattle ID', 'Temperature', 'Edit', 'Delete']
   // const value = 
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function FoodStock() {
 
   const loadData = () => {
     database()
-    .ref('/Cattle')
+    .ref('/Sick')
     .on("value",
        snapshot => {
          if (snapshot.val()) {
@@ -46,7 +46,7 @@ export default function FoodStock() {
 
     if(index <= keys.length){
 
-      let userRef = database().ref('Cattle/' + data[index].key);
+      let userRef = database().ref('Sick/' + data[index].key);
       userRef.update(data[index])
       .then(res => {
         setEditIndex(-1)
@@ -57,7 +57,7 @@ export default function FoodStock() {
   
       })
     }else{
-      let userRef = database().ref('/Cattle').push(data[index])
+      let userRef = database().ref('/Sick').push(data[index])
       .then(res => {
         loadData()
         setEditIndex(-1)
@@ -81,7 +81,7 @@ export default function FoodStock() {
   }
 
   const deleteItem = (index) => {
-    let userRef = database().ref('Cattle/' + data[index].key);
+    let userRef = database().ref('Sick/' + data[index].key);
     userRef.remove()
     .then(res => {
       loadData()
@@ -111,26 +111,10 @@ export default function FoodStock() {
               )
             }else if(ind == 1){
               return (
-                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'CattleName')} value={data[index].CattleName}/>
-              )
-            }else if(ind == 2){
-              return (
-                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Cattlecolor')} value={data[index]?.CattleColor}/>
-              )
-            }else if(ind == 3){
-              return (
-                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'CurrentWeight')} value={data[index]?.CurrentWight}/>
-              )
-            }else if(ind == 4){
-              return (
-                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'InitialWeight')} value={data[index]?.InitialWeight}/>
-              )
-            }else if(ind == 5){
-              return (
-                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Status')} value={data[index]?.Status}/>
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Temprature')} value={data[index].Temprature}/>
               )
             }
-            else if(ind == 6){
+            else if(ind == 2){
               return(
                 <View style={{width:110}}>
                   <TouchableOpacity onPress={() => upadteData(index)} style={styles.saveBtn}>
@@ -160,26 +144,10 @@ export default function FoodStock() {
               )
             }else if(ind == 1){
               return (
-                <Text style={styles.heading}>{elem.CattleName}</Text>
-              )
-            }else if(ind == 2){
-              return (
-                <Text style={styles.heading}>{elem.Cattlecolor}</Text>
-              )
-            }else if(ind == 3){
-              return (
-                <Text style={styles.heading}>{elem.CurrentWeight}</Text>
-              )
-            }else if(ind == 4){
-              return (
-                <Text style={styles.heading}>{elem.InitialWeight}</Text>
-              )
-            }else if(ind == 5){
-              return (
-                <Text style={styles.heading}>{elem.Status}</Text>
+                <Text style={styles.heading}>{elem.Temprature}</Text>
               )
             }
-            else if(ind == 6){
+            else if(ind == 2){
               return(
                 <View style={{width:110}}>
                 <TouchableOpacity  onPress={() => setEditIndex(index)} style={styles.btn}>
@@ -211,6 +179,7 @@ export default function FoodStock() {
 
   }
 
+  console.log('DATA', data)
 
   return (
     <View style={{paddingBottom:100}}>
