@@ -27,7 +27,7 @@ export default function FoodStock() {
           let data =  keys.map(elem => {
              const obj = {
                 ...todos[elem],
-                   key:elem
+                key:elem
              }
              return obj
           })
@@ -45,9 +45,13 @@ export default function FoodStock() {
   const upadteData = (index) => {
 
     if(index <= keys.length){
-
+      const obj = {
+        ...data[index],
+        Status : fetchCattleID()
+      }
+      // console.log('OBJ', obj)
       let userRef = database().ref('Cattle/' + data[index].key);
-      userRef.update(data[index])
+      userRef.update(obj)
       .then(res => {
         setEditIndex(-1)
         ToastAndroid.show('Updated successfully', ToastAndroid.SHORT)
@@ -57,7 +61,7 @@ export default function FoodStock() {
   
       })
     }else{
-      let userRef = database().ref('/Cattle').push(data[index])
+      let userRef = database().ref('/Cattle').push(obj)
       .then(res => {
         loadData()
         setEditIndex(-1)
@@ -92,6 +96,21 @@ export default function FoodStock() {
 
     })
   }
+
+  const fetchCattleID = () => {
+    let flag = Math.floor(Math.random() * 3);
+    if(flag==0){
+      return 'Average'
+    }
+    if(flag==1){
+      return 'Above Average'
+    }
+    if(flag==2){
+      return 'Below Average'
+    }
+  }
+
+  // console.log('fetchCattleID()', fetchCattleID())
 
   const renderRow = (elem, index) => {
     if(index == 0){

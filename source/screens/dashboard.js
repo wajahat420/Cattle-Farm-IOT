@@ -43,14 +43,12 @@ export default function Dashboard() {
 
   const fill = 'rgb(50, 65, 150)'
 
-  console.log('WEIGHTS', data)
 
 	 const initialWeights = data.filter(elem => !!parseInt(elem.InitialWeight)).map(elem => parseInt(elem.InitialWeight))
 	 let CurrentWeight = data.filter(elem => !!parseInt(elem.CurrentWeight)).map(elem => parseInt(elem.CurrentWeight))
 	 let CurrentName = data.filter(elem => !!parseInt(elem.CurrentWeight)).map(elem => elem.CattleName)
 	 const InitialName = data.filter(elem => !!parseInt(elem.InitialWeight)).map(elem => elem.CattleName)
 
-	 console.log('CurrentWeight', CurrentWeight)
 
   return (
     <ScrollView style={{flex:1,padding:10}}>
