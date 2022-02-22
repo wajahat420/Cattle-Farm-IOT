@@ -343,7 +343,7 @@ export default function FoodStock({ navigation }) {
 
             if(ind == 0){
               return (
-                <TextInput onChangeText={text => changeText(text, index, 'ID')} style={styles.editText} value={data[index].ID}/>
+                <TextInput onChangeText={text => changeText(text, index, 'CattleID')} style={styles.editText} value={data[index].CattleID}/>
               )
             }else if(ind == 1){
               return (
@@ -385,7 +385,7 @@ export default function FoodStock({ navigation }) {
   
             if(ind == 0){
               return (
-                <Text style={styles.heading}>{elem.ID}</Text>
+                <Text style={styles.heading}>{elem.CattleID}</Text>
               )
             }else if(ind == 1){
               return (
@@ -432,7 +432,8 @@ export default function FoodStock({ navigation }) {
 
   }
 
-  const dataArr = text.length > 0 ? data.filter((elem, index) => (index == 0 || elem?.CattleID.includes(text) || elem?.CattleName.includes(text) )) : data
+  console.log('DATA', data)
+  const dataArr = text.length > 0 ? data.filter((elem, index) => (index == 0 || elem?.CattleID.includes(text) || elem?.CattleName?.includes(text) )) : data
 
 
   return (
