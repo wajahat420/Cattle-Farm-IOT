@@ -9,6 +9,7 @@ export default function FoodStock({ navigation }) {
   const [keys,setKeys] = useState([])
   const [editIndex,setEditIndex] = useState(0)
   const [headerVal,setHeader] = useState(0)
+  const [text,setText] = useState('')
 
   const table = headerVal == 0 ? 'cattleFinance' : headerVal == 1 ? 'expense' : 'other_expense'
   const header = headerVal == 0 ?
@@ -431,16 +432,18 @@ export default function FoodStock({ navigation }) {
 
   }
 
+  const dataArr = text.length > 0 ? data.filter((elem, index) => (index == 0 || elem?.CattleID.includes(text) || elem?.CattleName.includes(text) )) : data
+
 
   return (
     <View style={{paddingBottom:100}}>
-
 
     <View style={{alignItems:'flex-end',margin:10}}>
       <TouchableOpacity onPress={addField} style={{backgroundColor:'brown',padding:5,paddingHorizontal:15,borderRadius:10}}>
         <Text style={{textAlign:'right', fontSize:15, color:'white', }}>Add</Text>
       </TouchableOpacity>
     </View>
+
 
   <View style={{flexDirection:'row', marginBottom:15, justifyContent:'space-around', borderBottomColor:'gray', borderBottomWidth:1, alignItems:'center'}}>
     <TouchableOpacity 
@@ -463,6 +466,9 @@ export default function FoodStock({ navigation }) {
   </View>
 
 
+  <TextInput onChangeText={setText} style={{borderWidth:1, margin:10, padding:10}} placeholder='search by Cattle ID / Name'/>
+
+
     <ScrollView>
       <ScrollView 
                   directionalLockEnabled={false}
@@ -472,7 +478,7 @@ export default function FoodStock({ navigation }) {
       <View style={{width:'100%',marginHorizontal:15}}>
 
         {
-          data.map((elem,index) => {
+          dataArr.map((elem,index) => {
             return (
               <View style={{flexDirection:'row', borderColor:'gray', borderWidth:1, marginVertical:2,padding:8, alignItems:'center'}}>
                 {

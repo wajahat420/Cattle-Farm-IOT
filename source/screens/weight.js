@@ -8,7 +8,7 @@ export default function FoodStock() {
   const [data,setData] = useState([])
   const [keys,setKeys] = useState([])
   const [editIndex,setEditIndex] = useState(0)
-  const header = ['Cattle ID', 'Cattle Name', 'Cattle Color', 'Current Weight', 'Initial Weight', 'Status', 'Edit', 'Delete']
+  const header = ['Cattle ID', 'Cattle Name', 'Cattle Color', 'Current Weight', 'Initial Weight', 'Cattle height', 'Status', 'Edit', 'Delete']
   // const value = 
 
   useEffect(() => {
@@ -61,6 +61,10 @@ export default function FoodStock() {
   
       })
     }else{
+      const obj = {
+        ...data[index],
+        Status : fetchCattleID()
+      }
       let userRef = database().ref('/Cattle').push(obj)
       .then(res => {
         loadData()
@@ -146,10 +150,15 @@ export default function FoodStock() {
               )
             }else if(ind == 5){
               return (
-                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Status')} value={data[index]?.Status}/>
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'CattleHeight')} value={data[index]?.CattleHeight}/>
               )
             }
             else if(ind == 6){
+              return (
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Status')} value={data[index]?.Status}/>
+              )
+            }
+            else if(ind == 7){
               return(
                 <View style={{width:110}}>
                   <TouchableOpacity onPress={() => upadteData(index)} style={styles.saveBtn}>
@@ -195,10 +204,15 @@ export default function FoodStock() {
               )
             }else if(ind == 5){
               return (
-                <Text style={styles.heading}>{elem.Status}</Text>
+                <Text style={styles.heading}>{elem.CattleHeight}</Text>
               )
             }
             else if(ind == 6){
+              return (
+                <Text style={styles.heading}>{elem.Status}</Text>
+              )
+            }
+            else if(ind == 7){
               return(
                 <View style={{width:110}}>
                 <TouchableOpacity  onPress={() => setEditIndex(index)} style={styles.btn}>

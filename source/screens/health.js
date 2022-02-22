@@ -125,7 +125,7 @@ export default function FoodStock() {
               )
             }else if(ind == 4){
               return (
-                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Temperature')} value={data[index]?.Temperature}/>
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Temprature')} value={data[index]?.Temprature}/>
               )
             }
             else if(ind == 5){
@@ -170,7 +170,7 @@ export default function FoodStock() {
               )
             }else if(ind == 4){
               return (
-                <Text style={styles.heading}>{elem.Temperature}</Text>
+                <Text style={styles.heading}>{elem.Temprature}</Text>
               )
             }else if(ind == 5){
               return(

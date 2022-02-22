@@ -8,7 +8,7 @@ export default function FoodStock() {
   const [data,setData] = useState([])
   const [keys,setKeys] = useState([])
   const [editIndex,setEditIndex] = useState(0)
-  const header = ['Cattle ID', 'Temperature', 'Edit', 'Delete']
+  const header = ['Cattle ID', 'Temperature', 'Cattle name', 'Cattle Color', 'Checkup', 'Edit', 'Delete']
   // const value = 
 
   useEffect(() => {
@@ -115,6 +115,20 @@ export default function FoodStock() {
               )
             }
             else if(ind == 2){
+              return (
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'CattleName')} value={data[index].CattleName}/>
+              )
+            }else if(ind == 3){
+              return (
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Cattlecolor')} value={data[index].Cattlecolor}/>
+              )
+            }
+            else if(ind == 4){
+              return (
+                <TextInput style={styles.editText} onChangeText={text => changeText(text, index, 'Checkup')} value={data[index].Checkup}/>
+              )
+            }
+            else if(ind == 5){
               return(
                 <View style={{width:110}}>
                   <TouchableOpacity onPress={() => upadteData(index)} style={styles.saveBtn}>
@@ -148,6 +162,20 @@ export default function FoodStock() {
               )
             }
             else if(ind == 2){
+              return (
+                <Text style={styles.heading}>{elem.CattleName}</Text>
+              )
+            }else if(ind == 3){
+              return (
+                <Text style={styles.heading}>{elem.Cattlecolor}</Text>
+              )
+            }
+            else if(ind == 4){
+              return (
+                <Text style={styles.heading}>{elem.Checkup}</Text>
+              )
+            }
+            else if(ind == 5){
               return(
                 <View style={{width:110}}>
                 <TouchableOpacity  onPress={() => setEditIndex(index)} style={styles.btn}>
